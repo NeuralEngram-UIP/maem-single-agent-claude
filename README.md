@@ -1,8 +1,15 @@
 # multi-agent-ebbinghaus-memory
 Multi-Agent AI Memory System using Ebbinghaus Forgetting Curve
 
+## Why This Project Matters
 
-# MemoryOS — Ebbinghaus Memory Agent
+Most AI systems today treat memory as a simple storage and retrieval layer, which limits how naturally agents can adapt over time. MemoryOS introduces a shift from static memory to dynamic cognitive memory, where information has a lifecycle—born, strengthened, weakened, and eventually forgotten.
+
+This approach improves long-term reasoning by ensuring that only relevant and reinforced knowledge influences future decisions. It reduces noise in memory systems, improves retrieval quality, and makes multi-agent systems more realistic and scalable.
+
+Instead of storing everything, MemoryOS focuses on storing what actually matters over time.
+
+# Ebbinghaus Memory Agent
 
 A multi-agent memory system that models human forgetting using the Ebbinghaus
 retention curve, with semantic search and SQLite persistence.
@@ -11,8 +18,10 @@ retention curve, with semantic search and SQLite persistence.
 
 ```
 memory_agent/
-├── agent.py                    # Chat loop — entry point
-├── prototype_ui.html           # Standalone browser prototype
+├──single_agent 
+    ├── agent.py     
+    ├── app.py                
+    ├── maem_demo.html           # Standalone browser prototype
 ├── requirements.txt
 └── memory_core/
     ├── ebbinghaus.py           # Retention formula: R = e^(-t/S)
@@ -33,36 +42,16 @@ memory_agent/
 | Semantic search | `sentence-transformers` all-MiniLM-L6-v2 cosine similarity |
 | Context budget | `trim_to_token_limit()` keeps working memory within token limits |
 
-## Quickstart
+## Alzheimer’s Patient Companion! : An Application
 
-```bash
-pip install -r requirements.txt
-cp .env.example .env          # add your ANTHROPIC_API_KEY
-python agent.py
-```
+This system can be conceptually used to simulate memory degradation patterns similar to Alzheimer’s disease, where memory retention gradually weakens and recall becomes inconsistent over time.
 
-Open `prototype_ui.html` in any browser for the visual demo (no server needed).
+By modeling controlled memory decay, it becomes possible to study how information loss affects decision-making and recall behavior in cognitive systems.
 
-## Bug Fixes Applied
+### Key simulation ideas:
+- Gradual reduction in memory retention strength over time  
+- Increased likelihood of forgetting rarely accessed information  
+- Fragmented recall where partial or related memories are retrieved instead of complete ones  
+- Difficulty in forming long-term stable memories without reinforcement  
 
-1. **`trim_to_token_limit` missing** — added to `WorkingMemory`; was called in
-   `agent.py` but never defined, causing an `AttributeError` at runtime.
-
-2. **`grounded_retrieve` return type mismatch** — previously returned
-   `(ep, emb)` tuples; callers treated them as plain `Episode` objects,
-   causing `AttributeError: 'tuple' has no attribute 'priority_score'`.
-   Now returns `List[Episode]`.
-
-3. **Spurious `increment_review` kwarg** — `agent.py` called
-   `store.recall(..., increment_review=True)` but the parameter does not
-   exist. Removed.
-
-4. **`recall()` capped quality at retention** — `q = min(quality, r)`
-   penalised deliberate recall of fading memories. Removed; quality is now
-   passed through directly.
-
-5. **`decay_curve_points` sampled 3× past the threshold** — useful range is
-   up to the forgetting point, not 3× beyond it. Changed multiplier to 1.5×.
-
-6. **Missing docstring params in `reinforce_memory`** — `review_count`,
-   `boost`, and `diminishing_factor` were not documented.
+Such models can help in research-oriented studies of memory degradation patterns and in designing systems that remain robust even under constrained or unreliable memory conditions.
