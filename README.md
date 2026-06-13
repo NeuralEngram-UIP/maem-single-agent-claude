@@ -1,5 +1,5 @@
-# multi-agent-ebbinghaus-memory
-Multi-Agent AI Memory System using Ebbinghaus Forgetting Curve
+# Multi-agent-ebbinghaus-memory-model
+
 
 ## Why This Project Matters
 
